@@ -2,7 +2,7 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { schemaEmail } from './schemas/schemasJoi';
+import { schemaEmail } from './schemas/schemasJoi.js';
 
 
 dotenv.config()
@@ -31,10 +31,20 @@ const run = async () => {
 
 
 app.post('/cadastro', async (req, res) => {
-    const { nome, email, senha, confirmarSenha } = req.body;
-    console.log(nome, email, senha, confirmarSenha)
+    let { nome, email, senha, confirmarSenha } = req.body;
+    console.log(nome, email, senha, confirmarSenha);
+  
+    const { error: validationError } = schemaEmail.validate({ email }); // Renomeando para validationError
+  
+    console.log(validationError);
+  
+    if (validationError) { // Usando validationError
+      return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+    }
+  
     res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
-})
+  });
+  
 
 
 
