@@ -35,20 +35,17 @@ app.post('/cadastro', async (req, res) => {
     let { nome, email, senha, confirmarSenha } = req.body;
     // console.log(nome, email, senha, confirmarSenha);
   
-    const { error: validationError } = schemaCadastro.validate({ email, senha }); // Renomeando para validationError
+    const { error: validationError } = schemaCadastro.validate({ email, senha });
   
-    if (validationError) { // Usando validationError
-        console.log(validationError)
-        return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
-    }
+    if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
         const participant = await db.collection("cadastro").find({email:{$eq: email}}).toArray()
         if(participant === []) return res.status(409).send("Erro 409 - email já cadastrado.")
     }catch(err){
         console.log(err)
     }
-    // hash.update(senha)
-    // senha = hash.digest('hex')
+    hash.update(senha)
+    senha = hash.digest('hex')
     console.log(senha) // Senha criptografada em sha256
     res.status(201).json({ message: 'Cadastro realizado com sucesso!' });
 });
