@@ -2,7 +2,8 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { schemaEmail } from './schemas/schemasJoi.js';
+import { schemaCadastro } from './schemas/schemasJoi.js';
+import crypto from 'crypto'
 
 
 dotenv.config()
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const mongoClient = new MongoClient(process.env.DATABASE_URL);
 let db;
-
+const hash = crypto.createHash('sha256')
 
 const run = async () => {
     try {
@@ -32,16 +33,16 @@ const run = async () => {
 
 app.post('/cadastro', async (req, res) => {
     let { nome, email, senha, confirmarSenha } = req.body;
-    console.log(nome, email, senha, confirmarSenha);
+    // console.log(nome, email, senha, confirmarSenha);
   
-    const { error: validationError } = schemaEmail.validate({ email }); // Renomeando para validationError
-  
-    console.log(validationError);
+    const { error: validationError } = schemaCadastro.validate({ email, senha }); // Renomeando para validationError
   
     if (validationError) { // Usando validationError
       return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     }
-  
+    hash.update(senha)
+    senha = hash.digest('hex')
+    console.log(senha) // Senha criptografada em sha256
     res.status(200).json({ message: 'Cadastro realizado com sucesso!' });
   });
   
