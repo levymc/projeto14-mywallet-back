@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const mongoClient = new MongoClient(process.env.DATABASE_URL);
 let db;
-const hash = crypto.createHash('sha256')
+
 
 const run = async () => {
     try {
@@ -34,20 +34,21 @@ const run = async () => {
 app.post('/cadastro', async (req, res) => {
     let { nome, email, senha, confirmarSenha } = req.body;
     // console.log(nome, email, senha, confirmarSenha);
-  
+    const hash = crypto.createHash('sha256')
     const { error: validationError } = schemaCadastro.validate({ email, senha });
   
     if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
         const participant = await db.collection("cadastro").find({email:{$eq: email}}).toArray()
-        if(participant === []) return res.status(409).send("Erro 409 - email já cadastrado.")
+        console.log(participant)
+        if(participant.length != 0) return res.status(409).send("Erro 409 - email já cadastrado.")
+        hash.update(senha)
+        senha = hash.digest('hex')
+        console.log(senha) // Senha criptografada em sha256
+        res.status(201).json({ message: 'Cadastro realizado com sucesso!' });
     }catch(err){
         console.log(err)
     }
-    hash.update(senha)
-    senha = hash.digest('hex')
-    console.log(senha) // Senha criptografada em sha256
-    res.status(201).json({ message: 'Cadastro realizado com sucesso!' });
 });
   
 
