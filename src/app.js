@@ -58,6 +58,26 @@ app.post('/cadastro', async (req, res) => {
 });
   
 
+app.post('/login', async (req, res) => {
+    let { email, senha } = req.body;
+    const hash = crypto.createHash('sha256')
+    const { error: validationError } = schemaCadastro.validate({ email, senha });
+  
+    if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+    try{
+        hash.update(senha)
+        senha = hash.digest('hex')
+        console.log(email, senha)
+        const participant = await db.collection("cadastro").findOne({$and: [
+            { email : {$eq: email} },
+            { senha : {$eq: senha} }
+            ]
+        })
+        console.log(participant )
+    }catch(err){
+
+    }
+});
 
 
 
