@@ -15,7 +15,10 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
-const mongoClient = new MongoClient(process.env.DATABASE_URL);
+const URI = process.env.DATABASE_URL;
+
+
+const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
 let db;
 
 
