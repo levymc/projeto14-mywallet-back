@@ -15,7 +15,11 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
-const URI = process.env.DATABASE_URL;
+let mode = 'dev';
+
+
+
+const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 
 
 const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -52,7 +56,6 @@ app.post('/cadastro', async (req, res) => {
         hash.update(senha)
         senha = hash.digest('hex')
         const insertedUser = await db.collection("cadastro").insertOne({nome, email, senha, insertedTime})
-        await db.collection("sessoes").insertOne({_id: insertedUser.insertedId,nome , token, insertedTime})
         res.status(201).json({ message: 'Cadastro realizado com sucesso!' , user:{_id: insertedUser.insertedId, nome, email, token, insertedTime}});
     }catch(err){
         console.log(err)
@@ -62,27 +65,31 @@ app.post('/cadastro', async (req, res) => {
   
 
 app.post('/login', async (req, res) => {
+    console.log(URI)
     let { email, senha } = req.body;
     const hash = crypto.createHash('sha256')
     const { error: validationError } = schemaCadastro.validate({ email, senha });
-    console.log(123)
     if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
+        const token = uuid()
+        const insertedTime = Date.now()
+
         hash.update(senha)
         senha = hash.digest('hex')
         console.log(email, senha)
-        const participant = await db.collection("cadastro").findOne({$and: [
-            { email : {$eq: email} },
-            { senha : {$eq: senha} }
-            ]
-        })
-        if(participant.length === 0){
-            
+        const participant = await db.collection("cadastro").findOne({ email: email });
+        console.log(1231231231231231231312)
+        console.log(111111, participant)
+        // await db.collection("sessoes").insertOne({_id: participant._id ,participant , token, insertedTime})
+        if(!participant){
+            res.status(404).send("E-mail não cadastrado.")
+        } else if(participant.senha != senha){
+            res.status(401).send("A senha não confere.")
         }
         console.log(participant )
         res.send(participant)
     }catch(err){
-
+        res.status(500).send(err.message)
     }
 });
 
