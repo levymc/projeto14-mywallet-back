@@ -62,7 +62,7 @@ app.post('/login', async (req, res) => {
     let { email, senha } = req.body;
     const hash = crypto.createHash('sha256')
     const { error: validationError } = schemaCadastro.validate({ email, senha });
-  
+    console.log(123)
     if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
         hash.update(senha)
@@ -73,7 +73,11 @@ app.post('/login', async (req, res) => {
             { senha : {$eq: senha} }
             ]
         })
+        if(participant.length === 0){
+            
+        }
         console.log(participant )
+        res.send(participant)
     }catch(err){
 
     }
