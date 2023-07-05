@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { schemaCadastro } from './schemas/schemasJoi.js';
 import crypto from 'crypto'
+import { v4 as uuid } from 'uuid';
 
 
 dotenv.config()
@@ -32,22 +33,25 @@ const run = async () => {
 
 
 app.post('/cadastro', async (req, res) => {
-    let { nome, email, senha, confirmarSenha } = req.body;
+    let { nome, email, senha } = req.body;
     // console.log(nome, email, senha, confirmarSenha);
     const hash = crypto.createHash('sha256')
     const { error: validationError } = schemaCadastro.validate({ email, senha });
   
     if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
+        const token = uuid()
         const participant = await db.collection("cadastro").find({email:{$eq: email}}).toArray()
         console.log(participant)
         if(participant.length != 0) return res.status(409).send("Erro 409 - email já cadastrado.")
         hash.update(senha)
         senha = hash.digest('hex')
-        console.log(senha) // Senha criptografada em sha256
-        res.status(201).json({ message: 'Cadastro realizado com sucesso!' });
+        const insertedUser = await db.collection("cadastro").insertOne({nome, email, senha})
+        await db.collection("sessoes").insertOne({_id: insertedUser.insertedId,nome , token})
+        res.status(201).json({ message: 'Cadastro realizado com sucesso!' , user:{_id: insertedUser.insertedId, nome, email, token}});
     }catch(err){
         console.log(err)
+        res.status(500).send(err)
     }
 });
   
