@@ -9,6 +9,7 @@ import { v4 as uuid } from 'uuid';
 
 dotenv.config()
 const app = express()
+const TTL = 3600
 
 app.use(cors())
 app.use(express.json())
@@ -28,7 +29,7 @@ const run = async () => {
     } catch (err) {
       console.error('Erro ao conectar no banco:', err)
     }
-    db =  mongoClient.db('projeto14')
+    db =  mongoClient.db()
 };
 
 
@@ -41,14 +42,15 @@ app.post('/cadastro', async (req, res) => {
     if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
     try{
         const token = uuid()
+        const insertedTime = Date.now()
         const participant = await db.collection("cadastro").find({email:{$eq: email}}).toArray()
         console.log(participant)
         if(participant.length != 0) return res.status(409).send("Erro 409 - email já cadastrado.")
         hash.update(senha)
         senha = hash.digest('hex')
-        const insertedUser = await db.collection("cadastro").insertOne({nome, email, senha})
-        await db.collection("sessoes").insertOne({_id: insertedUser.insertedId,nome , token})
-        res.status(201).json({ message: 'Cadastro realizado com sucesso!' , user:{_id: insertedUser.insertedId, nome, email, token}});
+        const insertedUser = await db.collection("cadastro").insertOne({nome, email, senha, insertedTime})
+        await db.collection("sessoes").insertOne({_id: insertedUser.insertedId,nome , token, insertedTime})
+        res.status(201).json({ message: 'Cadastro realizado com sucesso!' , user:{_id: insertedUser.insertedId, nome, email, token, insertedTime}});
     }catch(err){
         console.log(err)
         res.status(500).send(err)
