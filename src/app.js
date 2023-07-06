@@ -5,8 +5,9 @@ import dotenv from 'dotenv';
 import { schemaCadastro } from './schemas/schemasJoi.js';
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid';
-import { cadastro } from './controllers/cadastro.js';
-import { login } from './controllers/login.js';
+import { cadastro } from './controllers/cadastro.controller.js';
+import { login } from './controllers/login.controller.js';
+
 
 dotenv.config()
 const app = express()

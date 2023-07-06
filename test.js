@@ -1,3 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs'
 
-console.log(uuid())
+
+console.log(dayjs().format('DD/MM/YYYY HH:mm:s'))
