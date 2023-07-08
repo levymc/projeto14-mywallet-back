@@ -29,7 +29,6 @@ export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.
 const mongoClient = new MongoClient("mongodb+srv://"+URI);
 export let db;
 
-
 const run = async () => {
     try {
       await mongoClient.connect()
