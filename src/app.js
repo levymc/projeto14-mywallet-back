@@ -21,25 +21,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(routes);
 app.use(handleErr)
 
-let mode = 'dev';
-
+let mode = 'prod';
 
 
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 
-
 const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
 export let db;
-
-
-
-
-// Middleware para registrar as requisições
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next();
-});
-
 
 
 const run = async () => {
@@ -53,14 +41,12 @@ const run = async () => {
       console.error('Erro ao conectar no banco:', err)
     }
     db =  mongoClient.db()
-};
+}
 
 
 app.post('/cadastro', cadastro);
   
-
 app.post('/login', login);
-
 
 
 run();
