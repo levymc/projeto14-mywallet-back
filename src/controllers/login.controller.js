@@ -13,7 +13,7 @@ export async function login(req, res) {;
     try {
         await db.collection("sessoes").insertOne({userId: participant._id ,nome: participant.nome , token, insertedTime, date:dateNow})
         console.log('Sessão Inserida com Sucesso!')
-        res.send("Login realizado com sucesso!!");
+        res.send({userId: participant._id ,nome: participant.nome , token, insertedTime});
     } catch (err) {
         res.status(500).send(err.message);
     }
