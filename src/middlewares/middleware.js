@@ -1,7 +1,7 @@
 import { schemaCadastro } from '../schemas/schemasJoi.js';
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid';
-import { db } from '../app1.js';
+import { db } from '../app.js';
 import dayjs from 'dayjs'
 
 // middleware de validação dos dados de registro

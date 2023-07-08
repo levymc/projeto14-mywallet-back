@@ -3,11 +3,11 @@
   "type": "module",
   "version": "1.0.0",
   "description": "",
-  "main": "./src/app1.js",
+  "main": "./src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/app1.js",
-    "dev": "nodemon --delay 500ms ./src/app1.js"
+    "start": "node ./src/app.js",
+    "dev": "nodemon --delay 500ms ./src/app.js"
   },
   "engines": {
     "node": ">=18 <19"
