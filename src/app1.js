@@ -11,15 +11,15 @@ import routes from './routes/routes.js';
 
 
 dotenv.config()
-const app = express()
+const app1 = express()
 const TTL = 3600
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }));
-app.use(routes);
+app1.use(cors())
+app1.use(express.json())
+app1.use(express.urlencoded({ extended: true }));
+app1.use(routes);
 
-app.use((err, req, res, next) => {
+app1.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send('Erro interno no servidor');
 });
@@ -38,7 +38,7 @@ const run = async () => {
     try {
       await mongoClient.connect()
       console.log('Conexão!!!')
-      app.listen(process.env.PORT, () => {
+      app1.listen(process.env.PORT, () => {
           console.log(`Servidor Express rodando na url: http://localhost:${process.env.PORT}`);
       });
     } catch (err) {
@@ -52,7 +52,7 @@ const router = express.Router();
 router.post('/cadastro', cadastro);
 router.post('/login', login);
 
-app.use(router);
+app1.use(router);
 
 run();
 
