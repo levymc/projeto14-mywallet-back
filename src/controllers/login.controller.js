@@ -1,4 +1,3 @@
-import crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
 import { db, URI } from '../app.js';
 import { schemaCadastro } from '../schemas/schemasJoi.js';
@@ -19,9 +18,6 @@ export async function login(req, res) {;
         if (!participant) {
             return res.status(404).send("E-mail não cadastrado.");
         } 
-        if (participant.senha !== senha) {
-            return res.status(401).send("A senha não confere.");
-        }
         if (validationError) {
             return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
         }

@@ -2,9 +2,6 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { schemaCadastro } from './schemas/schemasJoi.js';
-import crypto from 'crypto'
-import { v4 as uuid } from 'uuid';
 import { cadastro } from './controllers/cadastro.controller.js';
 import { login } from './controllers/login.controller.js';
 import routes from './routes/routes.js';
@@ -25,7 +22,7 @@ app1.use((err, req, res, next) => {
 });
 
 
-let mode = 'prod';
+let mode = 'dev';
 
 
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
