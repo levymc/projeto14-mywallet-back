@@ -4,7 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { cadastro } from './controllers/cadastro.controller.js';
 import { login } from './controllers/login.controller.js';
-import routes from './routes/routes.js';
+import { entrada } from './controllers/entrada.controller.js'
+import router from './routes/routes.js';
 
 
 dotenv.config()
@@ -15,7 +16,8 @@ const TTL = 3600
 app1.use(cors())
 app1.use(express.json())
 app1.use(express.urlencoded({ extended: true }));
-app1.use(routes);
+app1.use(router);
+
 
 app1.use((err, req, res, next) => {
   console.error(err);
@@ -23,7 +25,7 @@ app1.use((err, req, res, next) => {
 });
 
 
-let mode = 'prod';
+let mode = 'dev';
 
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 const mongoClient = new MongoClient(URI);
@@ -42,13 +44,6 @@ const run = async () => {
     }
     db =  mongoClient.db()
 }
-
-const router = express.Router();
-
-router.post('/cadastro', cadastro);
-router.post('/login', login);
-
-app1.use(router);
 
 run();
 
