@@ -7,6 +7,8 @@ import crypto from 'crypto'
 import { v4 as uuid } from 'uuid';
 import { cadastro } from './controllers/cadastro.controller.js';
 import { login } from './controllers/login.controller.js';
+import routes from './routes/routes.js';
+import { handleErr } from './middlewares/middleware.js'
 
 
 dotenv.config()
@@ -16,8 +18,10 @@ const TTL = 3600
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(routes);
+app.use(handleErr)
 
-let mode = 'prod';
+let mode = 'dev';
 
 
 
@@ -26,6 +30,16 @@ export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.
 
 const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
 export let db;
+
+
+
+
+// Middleware para registrar as requisições
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 
 
 const run = async () => {

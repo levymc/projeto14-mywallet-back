@@ -1,8 +1,12 @@
 import express from 'express';
-import { cadastrarParticipante } from './controllers/participanteController.js';
+import { cadastro } from '../controllers/cadastro.controller.js'
+import { login } from '../controllers/login.controller.js';
+import { validateRegistrationData } from '../middlewares/middleware.js';
+
 
 const router = express.Router();
 
-router.post('/cadastro', cadastrarParticipante);
+router.post('/cadastro',validateRegistrationData , cadastro);
+router.post('/login', login);
 
 export default router;
