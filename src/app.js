@@ -39,7 +39,7 @@ const run = async () => {
     } catch (err) {
       console.error('Erro ao conectar no banco:', err)
     }
-    db =  mongoClient.db(process.env.DB_NAME)
+    db =  mongoClient.db()
 }
 
 const router = express.Router();
