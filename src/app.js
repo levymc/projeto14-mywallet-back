@@ -26,7 +26,7 @@ let mode = 'prod';
 
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 
-const mongoClient = new MongoClient("mongodb+srv://"+URI, {useNewUrlParser: true, useUnifiedTopology: true});
+const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
 export let db;
 
 
@@ -40,7 +40,7 @@ const run = async () => {
     } catch (err) {
       console.error('Erro ao conectar no banco:', err)
     }
-    db =  mongoClient.db()
+    db =  mongoClient.db(process.env.DB_NAME)
 }
 
 const router = express.Router();

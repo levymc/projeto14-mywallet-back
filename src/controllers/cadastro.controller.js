@@ -4,7 +4,7 @@ import { schemaCadastro } from '../schemas/schemasJoi.js';
 import dayjs from 'dayjs'
 
 
-export async function cadastro(req, res) {
+export async function cadastro(req, res, next) {
     const { nome, email } = req.registrationData;
     const { senha } = req.body;
   
