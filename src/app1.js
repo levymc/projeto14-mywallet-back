@@ -8,7 +8,6 @@ import { v4 as uuid } from 'uuid';
 import { cadastro } from './controllers/cadastro.controller.js';
 import { login } from './controllers/login.controller.js';
 import routes from './routes/routes.js';
-import { handleErr } from './middlewares/middleware.js'
 
 
 dotenv.config()
@@ -19,9 +18,14 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(routes);
-app.use(handleErr)
 
-let mode = 'prod';
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send('Erro interno no servidor');
+});
+
+
+let mode = 'dev';
 
 
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;

@@ -1,17 +1,8 @@
 import { schemaCadastro } from '../schemas/schemasJoi.js';
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid';
-import { db } from '../app.js';
-
-
-// Middleware para tratar erros
-export function handleErr(){
-    app.use((err, req, res, next) => {
-        console.error(err);
-        res.status(500).send('Erro interno no servidor');
-    });
-} 
-
+import { db } from '../app1.js';
+import dayjs from 'dayjs'
 
 // middleware de validação dos dados de registro
 export async function validateRegistrationData(req, res, next) {
@@ -40,18 +31,13 @@ export async function validateRegistrationData(req, res, next) {
 }
 
 // middleware de validação dos dados de login
-export function validateLoginData(req, res, next) {
-    const { email, senha } = req.body;
+export async function validateLoginData(req, res, next) {
+    let { email, senha } = req.body;
+    res.locals.email = email
     const hash = crypto.createHash('sha256');
-    const { error: validationError } = schemaCadastro.validate({ email, senha });
-    console.log("AQUII", email, senha)
-  
-    if (validationError) {
-      return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
-    }
-  
     hash.update(senha);
-    req.body.senha = hash.digest('hex');
-  
+    senha = hash.digest('hex');
+    res.locals.senha = senha   
+
     next();
 }

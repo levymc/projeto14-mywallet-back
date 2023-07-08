@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid';
-import { db } from '../app.js';
+import { db } from '../app1.js';
 import { schemaCadastro } from '../schemas/schemasJoi.js';
 import dayjs from 'dayjs'
 

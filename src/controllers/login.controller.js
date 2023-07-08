@@ -1,31 +1,33 @@
 import crypto from 'crypto';
 import { v4 as uuid } from 'uuid';
-import { db, URI } from '../app.js';
+import { db, URI } from '../app1.js';
 import { schemaCadastro } from '../schemas/schemasJoi.js';
+import dayjs from 'dayjs'
+
 
 export async function login(req, res) {;
+    const email = res.locals.email
+    let senha = res.locals.senha
+    const insertedTime = Date.now();
+    const dateNow = dayjs().format('DD/MM/YYYY HH:mm:s');
+    const token = uuid();
+
     try {
-        const token = uuid();
-        const insertedTime = Date.now();
-        const dateNow = dayjs().format('DD/MM/YYYY HH:mm:s');
-        console.log('qui!')
-        hash.update(senha);
-        senha = hash.digest('hex');
-        console.log(email, senha);
-
+        const { error: validationError } = schemaCadastro.validate({ email, senha });
         const participant = await db.collection("cadastro").findOne({ email: email });
-
-        console.log(1231231231231231231312);
-        console.log(111111, participant);
-        // await db.collection("sessoes").insertOne({_id: participant._id ,participant , token, insertedTime})
+        console.log(validationError)
         if (!participant) {
-        res.status(404).send("E-mail não cadastrado.");
-        } else if (participant.senha !== senha) {
-        res.status(401).send("A senha não confere.");
+            return res.status(404).send("E-mail não cadastrado.");
+        } 
+        if (participant.senha !== senha) {
+            return res.status(401).send("A senha não confere.");
         }
-
-        console.log(participant);
-        res.send(participant);
+        if (validationError) {
+            return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+        }
+        await db.collection("sessoes").insertOne({_id: participant._id ,nome: participant.nome , token, insertedTime, date:dateNow})
+        console.log('Aqui meu')
+        res.send("Login!");
     } catch (err) {
         res.status(500).send(err.message);
     }
