@@ -24,7 +24,6 @@ app1.use((err, req, res, next) => {
 
 let mode = 'prod';
 
-
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 
 const mongoClient = new MongoClient(URI, {useNewUrlParser: true, useUnifiedTopology: true});
