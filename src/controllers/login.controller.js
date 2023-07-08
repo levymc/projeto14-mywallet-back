@@ -25,7 +25,7 @@ export async function login(req, res) {;
         if (validationError) {
             return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
         }
-        await db.collection("sessoes").insertOne({_id: participant._id ,nome: participant.nome , token, insertedTime, date:dateNow})
+        await db.collection("sessoes").insertOne({userId: participant._id ,nome: participant.nome , token, insertedTime, date:dateNow})
         console.log('Aqui meu')
         res.send("Login!");
     } catch (err) {
