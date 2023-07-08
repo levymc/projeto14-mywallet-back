@@ -1,4 +1,4 @@
-import { schemaCadastro } from '../schemas/schemasJoi.js';
+import { schemaCadastro, schemaNome } from '../schemas/schemasJoi.js';
 import crypto from 'crypto'
 import { db } from '../app.js';
 import bcrypt from 'bcrypt';
@@ -8,9 +8,10 @@ import bcrypt from 'bcrypt';
 export async function validateRegistrationData(req, res, next) {
     const { nome, email, senha } = req.body;
     const { error: validationError } = schemaCadastro.validate({ email, senha })
+    const { error: validationErrorNome } = schemaNome.validate({ nome })
   
-    if (validationError) {
-      return res.status(422).send("Erro 422 - Algum dado inválido foi inserido")
+    if (validationError || validationErrorNome) {
+      return res.status(422).send("Algum dado inválido foi inserido")
     }
   
     try {
