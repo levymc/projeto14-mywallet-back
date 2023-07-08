@@ -43,11 +43,15 @@ const run = async () => {
     db =  mongoClient.db()
 }
 
+const router = express.Router();
 
-app.post('/cadastro', cadastro);
-  
-app.post('/login', login);
+router.post('/cadastro', cadastro);
+router.post('/login', login);
 
+app.use(router);
 
 run();
 
+process.once('SIGUSR2', function () {
+    process.kill(process.pid, 'SIGUSR2');
+});

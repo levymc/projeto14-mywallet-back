@@ -37,4 +37,21 @@ export async function validateRegistrationData(req, res, next) {
     } catch (err) {
       next(err); // Encaminha o erro para o middleware de tratamento de erros
     }
-  }
+}
+
+// middleware de validação dos dados de login
+export function validateLoginData(req, res, next) {
+    const { email, senha } = req.body;
+    const hash = crypto.createHash('sha256');
+    const { error: validationError } = schemaCadastro.validate({ email, senha });
+    console.log("AQUII", email, senha)
+  
+    if (validationError) {
+      return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+    }
+  
+    hash.update(senha);
+    req.body.senha = hash.digest('hex');
+  
+    next();
+}
