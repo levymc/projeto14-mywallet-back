@@ -5,25 +5,15 @@ import dayjs from 'dayjs'
 
 
 export async function login(req, res) {;
-    const email = res.locals.email
-    let senha = res.locals.senha
     const insertedTime = Date.now();
     const dateNow = dayjs().format('DD/MM/YYYY HH:mm:s');
     const token = uuid();
+    const participant = res.locals.participant
 
     try {
-        const { error: validationError } = schemaCadastro.validate({ email, senha });
-        const participant = await db.collection("cadastro").findOne({ email: email });
-        console.log(validationError)
-        if (!participant) {
-            return res.status(404).send("E-mail não cadastrado.");
-        } 
-        if (validationError) {
-            return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
-        }
         await db.collection("sessoes").insertOne({userId: participant._id ,nome: participant.nome , token, insertedTime, date:dateNow})
-        console.log('Aqui meu')
-        res.send("Login!");
+        console.log('Sessão Inserida com Sucesso!')
+        res.send("Login realizado com sucesso!!");
     } catch (err) {
         res.status(500).send(err.message);
     }

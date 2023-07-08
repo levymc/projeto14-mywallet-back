@@ -33,23 +33,24 @@ export async function validateRegistrationData(req, res, next) {
 export async function validateLoginData(req, res, next) {
     let { email, senha } = req.body;
     res.locals.email = email;
+    console.log(email,senha)
     
     try {
-        // senha = bcrypt.hashSync(senha, 10)
         const participant = await db.collection("cadastro").findOne({ email: email });
-    
-        if (!participant) {
-            res.status(404).send("E-mail não cadastrado.");
-        } else {
-            const result = bcrypt.compareSync(senha, participant.senha)
-            console.log(senha, participant.senha, result)
-            if (result === false) return res.status(401).send("A senha não confere.");
-            res.locals.senha = senha;
-            next();
-            
-        }
+        if (!participant) return res.status(404).send("E-mail não cadastrado.");
+        res.locals.participant = participant
+
+        const result = bcrypt.compareSync(senha, participant.senha)
+        if (result === false) return res.status(401).send("A senha não confere.");
+
+        const { error: validationError } = schemaCadastro.validate({ email, senha });
+        if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+        
+        res.locals.senha = senha;
+        next();
+        
     } catch (err) {
-      next(err); // Encaminha o erro para o middleware de tratamento de erros
+      next(err);
     }
   }
   
