@@ -2,6 +2,7 @@ import { schemaCadastro, schemaNome, schemaTransacValues } from '../schemas/sche
 import crypto from 'crypto'
 import { db } from '../app.js';
 import bcrypt from 'bcrypt';
+import { ObjectId } from 'mongodb';
 
 
 // middleware de validação dos dados de registro
@@ -85,9 +86,9 @@ export async function validateToken(req, res, next){
 export async function insertTransacValues(req, res, next){
     const { valor, descricao, type } = req.body
     const token = req.token
-
+    const id = req.headers.id;
     try{
-        await db.collection('transactions').insertOne({valor, descricao, token, type})
+        await db.collection('transactions').insertOne({valor, descricao, token, type, userId: id})
         
         next()
     }catch(err){
@@ -97,11 +98,13 @@ export async function insertTransacValues(req, res, next){
   
 
 export async function getTransactions(req, res, next){
-    const authorizationHeader = req.headers.authorization;
-    let token
-    if (authorizationHeader) {
-        token = authorizationHeader.split(" ")[1]
-        req.token = token
-        console.log(token)
+    const id = req.headers.id;
+    const token = req.token
+    try{
+        const data = await db.collection("transactions").find({ userId: id }).toArray()
+        req.data = data
+        next()
+    }catch(err){
+        next(err)
     }
 }

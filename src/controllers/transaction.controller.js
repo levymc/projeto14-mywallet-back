@@ -8,3 +8,6 @@ export function transaction(req, res){
     res.send(req.body)
 }
 
+export function controllerGetTrans(req, res){
+    res.send(req.data)
+}
