@@ -64,12 +64,32 @@ export function validateTransacValues(req, res, next){
     next()
 }
 
+
+export async function validateToken(req, res, next){
+    const authorizationHeader = req.headers.authorization;
+    let token
+    if (authorizationHeader) {
+        token = authorizationHeader.split(" ")[1]
+        req.token = token
+    }
+    try{
+        const participant = db.collection('sessoes').findOne({token})
+        if (!participant) return res.status(401).send("Não autorizado!");
+        next()
+
+    }catch(err){
+        next(err)
+    }
+}
+
+
 export async function insertTransacValues(req, res, next){
     const { valor, descricao, type } = req.body
+    const token = req.token
 
     try{
-        await db.collection(type).insertOne({valor, descricao})
-
+        await db.collection(type).insertOne({valor, descricao, token})
+        
         next()
     }catch(err){
         next(err)
