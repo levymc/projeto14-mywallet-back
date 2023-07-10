@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/cadastro',validateRegistrationData , cadastro);
 router.post('/login',validateLoginData , login);
-router.post('/entrada', validateTransacValues, validateToken, insertTransacValues, transaction)
-router.post('/saida', validateTransacValues, validateToken, insertTransacValues, transaction)
+router.post('/transactions', validateTransacValues, validateToken, insertTransacValues, transaction)
+router.get('/transactions')
 
 export default router;

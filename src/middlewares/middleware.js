@@ -87,7 +87,7 @@ export async function insertTransacValues(req, res, next){
     const token = req.token
 
     try{
-        await db.collection(type).insertOne({valor, descricao, token})
+        await db.collection('transactions').insertOne({valor, descricao, token, type})
         
         next()
     }catch(err){
