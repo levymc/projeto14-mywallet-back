@@ -2,9 +2,6 @@ import express from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { cadastro } from './controllers/cadastro.controller.js';
-import { login } from './controllers/login.controller.js';
-import { entrada } from './controllers/entrada.controller.js'
 import router from './routes/routes.js';
 
 

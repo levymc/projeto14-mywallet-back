@@ -33,22 +33,21 @@ export async function validateRegistrationData(req, res, next) {
 // middleware de validação dos dados de login
 export async function validateLoginData(req, res, next) {
     let { email, senha } = req.body;
-    res.locals.email = email;
-    console.log(email,senha)
+    res.locals.email = email
     
     try {
-        const participant = await db.collection("cadastro").findOne({ email: email });
-        if (!participant) return res.status(404).send("E-mail não cadastrado.");
+        const participant = await db.collection("cadastro").findOne({ email: email })
+        if (!participant) return res.status(404).send("E-mail não cadastrado.")
         res.locals.participant = participant
 
         const result = bcrypt.compareSync(senha, participant.senha)
-        if (result === false) return res.status(401).send("A senha não confere.");
+        if (result === false) return res.status(401).send("A senha não confere.")
 
-        const { error: validationError } = schemaCadastro.validate({ email, senha });
-        if (validationError) return res.status(422).send("Algum dado inválido foi inserido");
+        const { error: validationError } = schemaCadastro.validate({ email, senha })
+        if (validationError) return res.status(422).send("Algum dado inválido foi inserido")
         
-        res.locals.senha = senha;
-        next();
+        res.locals.senha = senha
+        next()
         
     } catch (err) {
       next(err);
