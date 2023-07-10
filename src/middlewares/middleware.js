@@ -95,3 +95,13 @@ export async function insertTransacValues(req, res, next){
     }
 }
   
+
+export async function getTransactions(req, res, next){
+    const authorizationHeader = req.headers.authorization;
+    let token
+    if (authorizationHeader) {
+        token = authorizationHeader.split(" ")[1]
+        req.token = token
+        console.log(token)
+    }
+}
