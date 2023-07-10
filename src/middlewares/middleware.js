@@ -3,7 +3,7 @@ import crypto from 'crypto'
 import { db } from '../app.js';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
-
+import dayjs from 'dayjs';
 
 // middleware de validação dos dados de registro
 export async function validateRegistrationData(req, res, next) {
@@ -88,7 +88,7 @@ export async function insertTransacValues(req, res, next){
     const token = req.token
     const id = req.headers.id;
     try{
-        await db.collection('transactions').insertOne({valor, descricao, token, type, userId: id})
+        await db.collection('transactions').insertOne({valor, descricao, token, type, userId: id, data: dayjs().format('DD/MM')})
         
         next()
     }catch(err){
