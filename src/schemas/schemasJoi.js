@@ -8,3 +8,8 @@ export const schemaCadastro = Joi.object({
 export const schemaNome = Joi.object({
     nome: Joi.string().min(1).required()
 })
+
+export const schemaTransacValues = Joi.object({
+    valor: Joi.number().positive().min(1).required(),
+    descricao: Joi.string().min(1).required()
+})

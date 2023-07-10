@@ -3,6 +3,8 @@ import { db, URI } from '../app.js';
 import { schemaCadastro } from '../schemas/schemasJoi.js';
 import dayjs from 'dayjs'
 
-export function entrada(){
-    console.log("oi")
+export function entrada(req, res){
+
+    console.log(req.body, req.headers.authorization)
+    res.send(req.body)
 }

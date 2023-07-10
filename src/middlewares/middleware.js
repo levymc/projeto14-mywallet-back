@@ -1,4 +1,4 @@
-import { schemaCadastro, schemaNome } from '../schemas/schemasJoi.js';
+import { schemaCadastro, schemaNome, schemaTransacValues } from '../schemas/schemasJoi.js';
 import crypto from 'crypto'
 import { db } from '../app.js';
 import bcrypt from 'bcrypt';
@@ -45,7 +45,7 @@ export async function validateLoginData(req, res, next) {
         if (result === false) return res.status(401).send("A senha não confere.");
 
         const { error: validationError } = schemaCadastro.validate({ email, senha });
-        if (validationError) return res.status(422).send("Erro 422 - Algum dado inválido foi inserido");
+        if (validationError) return res.status(422).send("Algum dado inválido foi inserido");
         
         res.locals.senha = senha;
         next();
@@ -53,5 +53,26 @@ export async function validateLoginData(req, res, next) {
     } catch (err) {
       next(err);
     }
-  }
+}
+
+
+//middleware de validação dos valores inputados tanto em entrada como em saida
+export function validateTransacValues(req, res, next){
+    const { valor, descricao, type } = req.body
+    const { error: validationError} = schemaTransacValues.validate({ valor, descricao })
+    if (validationError) return res.status(422).send("Algum dado inválido foi inserido");
+    next()
+}
+
+export async function insertTransacValues(req, res, next){
+    const { valor, descricao, type } = req.body
+
+    try{
+        await db.collection(type).insertOne({valor, descricao})
+
+        next()
+    }catch(err){
+        next(err)
+    }
+}
   
