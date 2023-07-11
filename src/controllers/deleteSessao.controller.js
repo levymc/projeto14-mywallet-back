@@ -1,6 +1,7 @@
 import { db } from "../app.js"
 
 export async function deleteSessao(req, res){
+    
     const token = req.body.token
     try{
         console.log(token)
