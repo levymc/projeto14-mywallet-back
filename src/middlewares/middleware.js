@@ -101,8 +101,27 @@ export async function getTransactions(req, res, next){
     const id = req.headers.id;
     const token = req.token
     try{
-        const data = await db.collection("transactions").find({ userId: id }).toArray()
+        const data = await db.collection("transactions").find({ userId: id }).toArray()      
+        const somaValores = await db.collection("transactions").aggregate([
+          {
+            $group: {
+              _id: null,
+              total: {
+                $sum: {
+                  $cond: [
+                    { $eq: ["$type", "entrada"] },
+                    { $toDouble: "$valor" },
+                    { $multiply: [{ $toDouble: "$valor" }, -1] }
+                  ]
+                }
+              }
+            }
+          }
+        ]).toArray();
+        
+        console.log(somaValores)
         req.data = data
+        req.total = somaValores
         next()
     }catch(err){
         next(err)

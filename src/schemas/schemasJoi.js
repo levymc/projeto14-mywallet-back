@@ -10,6 +10,6 @@ export const schemaNome = Joi.object({
 })
 
 export const schemaTransacValues = Joi.object({
-    valor: Joi.number().positive().min(1).required(),
+    valor: Joi.number().positive().min(1).precision(2).required(),
     descricao: Joi.string().min(1).required()
 })
