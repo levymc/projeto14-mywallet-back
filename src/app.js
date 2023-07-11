@@ -7,8 +7,6 @@ import router from './routes/routes.js';
 
 dotenv.config()
 const app1 = express()
-const TTL = 3600
-
 
 app1.use(cors())
 app1.use(express.json())
@@ -22,7 +20,7 @@ app1.use((err, req, res, next) => {
 });
 
 
-let mode = 'prod';
+let mode = 'dev';
 export const URI = mode === 'dev' ?  process.env.DATABASE_URL_DEV : process.env.DATABASE_URL;
 
 

@@ -24,3 +24,9 @@ export async function deleteTransac(req, res){
         res.status(500).send("A comunicação com o banco de dados falhou...")
     }
 }
+
+
+export async function updateTransac(req, res){
+    console.log("chegou aqui")
+    console.log(req.body.data.id)
+}
