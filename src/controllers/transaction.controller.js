@@ -25,8 +25,12 @@ export async function deleteTransac(req, res){
     }
 }
 
+export function sendTransacById(req, res){
+    const data = req.data
+    res.send(data)
+}
 
 export async function updateTransac(req, res){
     console.log("chegou aqui")
-    console.log(req.body.data.id)
+    console.log(req.data)
 }
