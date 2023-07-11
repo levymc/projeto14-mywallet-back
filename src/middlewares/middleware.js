@@ -109,6 +109,17 @@ export async function getTransactions(req, res, next){
     }
 }
 
+export async function getTransactionsById(req, res, next){
+  const id = req.headers.id;
+  try{
+      const data = await db.collection("transactions").findOne({ _id: new ObjectId(id) }) 
+      req.data = data
+      next()
+  }catch(err){
+      next(err)
+  }
+}
+
 export async function getTotalTransaction(req, res, next){
 
     try{
