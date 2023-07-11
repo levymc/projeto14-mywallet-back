@@ -34,3 +34,16 @@ export async function updateTransac(req, res){
     console.log("chegou aqui")
     console.log(req.data)
 }
+
+// export async function insertTransacValues(req, res, next){
+//     const { valor, descricao, type } = req.body
+//     const token = req.token
+//     const id = req.headers.id;
+//     try{
+//         await db.collection('transactions').insertOne({valor, descricao, token, type, userId: id, data: dayjs().format('DD/MM')})
+        
+//         next()
+//     }catch(err){
+//         next(err)
+//     }
+// }
