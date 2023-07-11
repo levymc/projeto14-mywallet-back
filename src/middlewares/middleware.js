@@ -71,7 +71,7 @@ export async function validateToken(req, res, next){
     if (authorizationHeader) {
         token = authorizationHeader.split(" ")[1]
         req.token = token
-    }
+    }else return res.sendStatus(401)
     try{
         const participant = db.collection('sessoes').findOne({token})
         if (!participant) return res.status(401).send("Não autorizado!");
@@ -114,6 +114,9 @@ export async function getTotalTransaction(req, res, next){
     try{
         const somaValores = await db.collection("transactions").aggregate([
             {
+              $match: { "userId": req.headers.id }
+            },
+            {
               $group: {
                 _id: null,
                 total: {
@@ -127,7 +130,8 @@ export async function getTotalTransaction(req, res, next){
                 }
               }
             }
-          ]).toArray();
+          ]).toArray()
+        //   console.log(somaValores)      
           req.total = somaValores
           next()
     }catch(err){
